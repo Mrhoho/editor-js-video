@@ -26,7 +26,7 @@ module.exports = (env, argv) => {
   const webpack = require('webpack');
 
   return {
-    entry: ['./src/index.js'],
+    entry: [ './src/index.js' ],
     module: {
       rules: [
         {
@@ -36,7 +36,7 @@ module.exports = (env, argv) => {
             {
               loader: 'babel-loader',
               query: {
-                presets: ['@babel/preset-env'],
+                presets: [ '@babel/preset-env' ],
               },
             },
             'eslint-loader',
@@ -72,14 +72,14 @@ module.exports = (env, argv) => {
       }),
 
       new webpack.BannerPlugin({
-        banner: `Image tool\n\n@version ${VERSION}\n\n@package https://github.com/editor-js/image\n@licence MIT\n@author CodeX <https://codex.so>`,
+        banner: `Video tool\n\n@version ${VERSION}\n\n@package https://github.com/editor-js/video\n@licence MIT\n@author CodeX <https://codex.so>`,
       }),
     ],
     output: {
       path: path.join(__dirname, '/dist'),
       publicPath: '/',
       filename: 'bundle.js',
-      library: 'ImageTool',
+      library: 'VideoTool',
       libraryTarget: 'umd',
       libraryExport: 'default',
     },

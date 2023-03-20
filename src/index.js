@@ -1,9 +1,9 @@
 /**
- * Image Tool for the Editor.js
+ * Video Tool for the Editor.js
  *
  * @author CodeX <team@codex.so>
  * @license MIT
- * @see {@link https://github.com/editor-js/image}
+ * @see {@link https://github.com/editor-js/video}
  *
  * To developers.
  * To simplify Tool structure, we split it to 4 parts:
@@ -19,8 +19,8 @@
  *
  * It will expose 8008 port, so you can pass http://localhost:8008 with the Tools config:
  *
- * image: {
- *   class: ImageTool,
+ * video: {
+ *   class: VideoTool,
  *   config: {
  *     endpoints: {
  *       byFile: 'http://localhost:8008/uploadFile',
@@ -31,14 +31,14 @@
  */
 
 /**
- * @typedef {object} ImageToolData
- * @description Image Tool's input and output data format
- * @property {string} caption — image caption
- * @property {boolean} withBorder - should image be rendered with border
- * @property {boolean} withBackground - should image be rendered with background
- * @property {boolean} stretched - should image be stretched to full width of container
- * @property {object} file — Image file data returned from backend
- * @property {string} file.url — image URL
+ * @typedef {object} VideoToolData
+ * @description Video Tool's input and output data format
+ * @property {string} caption — video caption
+ * @property {boolean} withBorder - should video be rendered with border
+ * @property {boolean} withBackground - should video be rendered with background
+ * @property {boolean} stretched - should video be stretched to full width of container
+ * @property {object} file — Video file data returned from backend
+ * @property {string} file.url — video URL
  */
 
 import './index.css';
@@ -46,23 +46,21 @@ import './index.css';
 import Ui from './ui';
 import Uploader from './uploader';
 
-import { IconAddBorder, IconStretch, IconAddBackground, IconPicture } from '@codexteam/icons';
-
 /**
- * @typedef {object} ImageConfig
+ * @typedef {object} VideoConfig
  * @description Config supported by Tool
  * @property {object} endpoints - upload endpoints
  * @property {string} endpoints.byFile - upload by file
  * @property {string} endpoints.byUrl - upload by URL
- * @property {string} field - field name for uploaded image
+ * @property {string} field - field name for uploaded video
  * @property {string} types - available mime-types
  * @property {string} captionPlaceholder - placeholder for Caption field
  * @property {object} additionalRequestData - any data to send with requests
  * @property {object} additionalRequestHeaders - allows to pass custom headers with Request
  * @property {string} buttonContent - overrides for Select File button
  * @property {object} [uploader] - optional custom uploader
- * @property {function(File): Promise.<UploadResponseFormat>} [uploader.uploadByFile] - method that upload image by File
- * @property {function(string): Promise.<UploadResponseFormat>} [uploader.uploadByUrl] - method that upload image by URL
+ * @property {function(File): Promise.<UploadResponseFormat>} [uploader.uploadByFile] - method that upload video by File
+ * @property {function(string): Promise.<UploadResponseFormat>} [uploader.uploadByUrl] - method that upload video by URL
  */
 
 /**
@@ -72,9 +70,9 @@ import { IconAddBorder, IconStretch, IconAddBackground, IconPicture } from '@cod
  * @property {object} file - Object with file data.
  *                           'url' is required,
  *                           also can contain any additional data that will be saved and passed back
- * @property {string} file.url - [Required] image source URL
+ * @property {string} file.url - [Required] video source URL
  */
-export default class ImageTool {
+export default class VideoTool {
   /**
    * Notify core that read-only mode is supported
    *
@@ -93,43 +91,24 @@ export default class ImageTool {
    */
   static get toolbox() {
     return {
-      icon: IconPicture,
-      title: 'Image',
+      icon: '<svg t="1679305865141" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="994" width="24" height="24"><path d="M669.44 897.28H334.08c-136.96 0-248.32-107.52-248.32-240.64V368.64C85.76 236.8 197.12 128 334.08 128h337.92c135.68 0 245.76 107.52 245.76 240.64v290.56c0 131.84-111.36 238.08-248.32 238.08z m-335.36-704c-101.12 0-184.32 79.36-184.32 176.64v288c0 97.28 83.2 176.64 184.32 176.64h335.36c101.12 0 184.32-78.08 184.32-174.08V368.64c0-97.28-81.92-176.64-181.76-176.64H334.08z" p-id="995"></path><path d="M446.72 427.52c3.84 0 6.4 1.28 10.24 2.56l115.2 66.56c12.8 7.68 12.8 25.6 0 33.28l-115.2 66.56c-2.56 1.28-6.4 2.56-10.24 2.56-10.24 0-19.2-7.68-19.2-19.2V446.72c0-11.52 8.96-19.2 19.2-19.2m0-51.2c-38.4 0-70.4 32-70.4 70.4v133.12c0 38.4 32 70.4 70.4 70.4 12.8 0 24.32-3.84 35.84-8.96l115.2-66.56c21.76-12.8 35.84-35.84 35.84-61.44s-14.08-48.64-35.84-61.44l-115.2-66.56c-10.24-6.4-23.04-8.96-35.84-8.96z" p-id="996"></path></svg>',
+      title: 'Video',
     };
   }
 
   /**
-   * Available image tools
+   * Available video tools
    *
    * @returns {Array}
    */
   static get tunes() {
-    return [
-      {
-        name: 'withBorder',
-        icon: IconAddBorder,
-        title: 'With border',
-        toggle: true,
-      },
-      {
-        name: 'stretched',
-        icon: IconStretch,
-        title: 'Stretch image',
-        toggle: true,
-      },
-      {
-        name: 'withBackground',
-        icon: IconAddBackground,
-        title: 'With background',
-        toggle: true,
-      },
-    ];
+    return [];
   }
 
   /**
    * @param {object} tool - tool properties got from editor.js
-   * @param {ImageToolData} tool.data - previously saved data
-   * @param {ImageConfig} tool.config - user config for Tool
+   * @param {VideoToolData} tool.data - previously saved data
+   * @param {VideoConfig} tool.config - user config for Tool
    * @param {object} tool.api - Editor.js API
    * @param {boolean} tool.readOnly - read-only mode flag
    */
@@ -144,9 +123,11 @@ export default class ImageTool {
       endpoints: config.endpoints || '',
       additionalRequestData: config.additionalRequestData || {},
       additionalRequestHeaders: config.additionalRequestHeaders || {},
-      field: config.field || 'image',
-      types: config.types || 'image/*',
-      captionPlaceholder: this.api.i18n.t(config.captionPlaceholder || 'Caption'),
+      field: config.field || 'video',
+      types: config.types || 'video/*',
+      captionPlaceholder: this.api.i18n.t(
+        config.captionPlaceholder || 'Caption'
+      ),
       buttonContent: config.buttonContent || '',
       uploader: config.uploader || undefined,
       actions: config.actions || [],
@@ -196,9 +177,9 @@ export default class ImageTool {
   }
 
   /**
-   * Validate data: check if Image exists
+   * Validate data: check if Video exists
    *
-   * @param {ImageToolData} savedData — data received after saving
+   * @param {VideoToolData} savedData — data received after saving
    * @returns {boolean} false if saved data is not correct, otherwise true
    * @public
    */
@@ -211,7 +192,7 @@ export default class ImageTool {
    *
    * @public
    *
-   * @returns {ImageToolData}
+   * @returns {VideoToolData}
    */
   save() {
     const caption = this.ui.nodes.caption;
@@ -222,7 +203,7 @@ export default class ImageTool {
   }
 
   /**
-   * Returns configuration for block tunes: add background, add border, stretch image
+   * Returns configuration for block tunes: add background, add border, stretch video
    *
    * @public
    *
@@ -230,10 +211,10 @@ export default class ImageTool {
    */
   renderSettings() {
     // Merge default tunes with the ones that might be added by user
-    // @see https://github.com/editor-js/image/pull/49
-    const tunes = ImageTool.tunes.concat(this.config.actions);
+    // @see https://github.com/editor-js/video/pull/49
+    const tunes = VideoTool.tunes.concat(this.config.actions);
 
-    return tunes.map(tune => ({
+    return tunes.map((tune) => ({
       icon: tune.icon,
       label: this.api.i18n.t(tune.title),
       name: tune.name,
@@ -252,7 +233,7 @@ export default class ImageTool {
   }
 
   /**
-   * Fires after clicks on the Toolbox Image Icon
+   * Fires after clicks on the Toolbox Video Icon
    * Initiates click on the Select File button
    *
    * @public
@@ -274,21 +255,23 @@ export default class ImageTool {
        */
       tags: [
         {
-          img: { src: true },
+          video: { src: true },
         },
       ],
       /**
-       * Paste URL of image into the Editor
+       * Paste URL of video into the Editor
+       * .avi / .wmv / .mov / .webm / .mpeg4 / .ts / .mpg / .rm / .rmvb / .mkv / .mp4
        */
       patterns: {
-        image: /https?:\/\/\S+\.(gif|jpe?g|tiff|png|svg|webp)(\?[a-z0-9=]*)?$/i,
+        video:
+          /https?:\/\/\S+\.(avi|wmv|mov|webm|mpeg4|ts|mpg|rm|rmvb|mkv|mp4)(\?[a-z0-9=]*)?$/i,
       },
 
       /**
        * Drag n drop file from into the Editor
        */
       files: {
-        mimeTypes: [ 'image/*' ],
+        mimeTypes: [ 'video/*' ],
       },
     };
   }
@@ -305,18 +288,18 @@ export default class ImageTool {
   async onPaste(event) {
     switch (event.type) {
       case 'tag': {
-        const image = event.detail.data;
+        const video = event.detail.data;
 
-        /** Images from PDF */
-        if (/^blob:/.test(image.src)) {
-          const response = await fetch(image.src);
+        /** Videos from PDF */
+        if (/^blob:/.test(video.src)) {
+          const response = await fetch(video.src);
           const file = await response.blob();
 
           this.uploadFile(file);
           break;
         }
 
-        this.uploadUrl(image.src);
+        this.uploadUrl(video.src);
         break;
       }
       case 'pattern': {
@@ -344,16 +327,19 @@ export default class ImageTool {
    *
    * @private
    *
-   * @param {ImageToolData} data - data in Image Tool format
+   * @param {VideoToolData} data - data in Video Tool format
    */
   set data(data) {
-    this.image = data.file;
+    this.video = data.file;
 
     this._data.caption = data.caption || '';
     this.ui.fillCaption(this._data.caption);
 
-    ImageTool.tunes.forEach(({ name: tune }) => {
-      const value = typeof data[tune] !== 'undefined' ? data[tune] === true || data[tune] === 'true' : false;
+    VideoTool.tunes.forEach(({ name: tune }) => {
+      const value =
+        typeof data[tune] !== 'undefined'
+          ? data[tune] === true || data[tune] === 'true'
+          : false;
 
       this.setTune(tune, value);
     });
@@ -364,24 +350,24 @@ export default class ImageTool {
    *
    * @private
    *
-   * @returns {ImageToolData}
+   * @returns {VideoToolData}
    */
   get data() {
     return this._data;
   }
 
   /**
-   * Set new image file
+   * Set new video file
    *
    * @private
    *
    * @param {object} file - uploaded file data
    */
-  set image(file) {
+  set video(file) {
     this._data.file = file || {};
 
     if (file && file.url) {
-      this.ui.fillImage(file.url);
+      this.ui.fillVideo(file.url);
     }
   }
 
@@ -395,7 +381,7 @@ export default class ImageTool {
    */
   onUpload(response) {
     if (response.success && response.file) {
-      this.image = response.file;
+      this.video = response.file;
     } else {
       this.uploadingFailed('incorrect response: ' + JSON.stringify(response));
     }
@@ -409,10 +395,10 @@ export default class ImageTool {
    * @returns {void}
    */
   uploadingFailed(errorText) {
-    console.log('Image Tool: uploading failed because of', errorText);
+    console.log('Video Tool: uploading failed because of', errorText);
 
     this.api.notifier.show({
-      message: this.api.i18n.t('Couldn’t upload image. Please try another.'),
+      message: this.api.i18n.t('Couldn’t upload video. Please try another.'),
       style: 'error',
     });
     this.ui.hidePreloader();
@@ -447,19 +433,20 @@ export default class ImageTool {
       /**
        * Wait until the API is ready
        */
-      Promise.resolve().then(() => {
-        const blockId = this.api.blocks.getCurrentBlockIndex();
+      Promise.resolve()
+        .then(() => {
+          const blockId = this.api.blocks.getCurrentBlockIndex();
 
-        this.api.blocks.stretchBlock(blockId, value);
-      })
-        .catch(err => {
+          this.api.blocks.stretchBlock(blockId, value);
+        })
+        .catch((err) => {
           console.error(err);
         });
     }
   }
 
   /**
-   * Show preloader and upload image file
+   * Show preloader and upload video file
    *
    * @param {File} file - file that is currently uploading (from paste)
    * @returns {void}
@@ -473,7 +460,7 @@ export default class ImageTool {
   }
 
   /**
-   * Show preloader and upload image by target url
+   * Show preloader and upload video by target url
    *
    * @param {string} url - url pasted
    * @returns {void}
